@@ -1,0 +1,151 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script type="module" src="https://md-block.verou.me/md-block.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+
+  <style type="text/tailwindcss">
+    body {
+      font-family: Roboto, sans-serif;
+    }
+
+    @layer base {
+      h1 {
+        @apply text-4xl font-bold;
+      }
+      h2 {
+        @apply text-3xl font-semibold;
+      }
+      h3 {
+        @apply text-2xl font-medium;
+      }
+      h4 {
+        @apply text-xl font-medium;
+      }
+      ul {
+        @apply list-disc ml-5;
+      }
+      ol {
+        @apply list-decimal ml-5;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="flex w-screen justify-center my-3">
+    <div class="font-bold text-3xl bg-slate-200 py-2 px-3 rounded-lg">CS1101S Practical Assessment</div>
+  </div>
+
+  <div class="mt-8 w-screen flex justify-center">
+    <div class="w-[65vw] flex text-2xl">
+      <div class="font-extralight">
+        Start Time: <span id="start" class="text-3xl px-2 font-light"></span>
+      </div>
+      <div class="flex-grow"></div>
+      <div class="font-extralight">
+        End Time: <span id="end" class="text-3xl px-2 font-light"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="my-8 w-screen flex justify-center">
+    <div id="timer" class="font-thin text-[5rem] leading-none">00:00:00</div>
+  </div>
+
+  <div class="my-4 w-screen flex justify-center">
+    <div class="w-[65vw] rounded-xl bg-slate-100 p-3 text-lg">
+      <p class="m-0.5">1. Place your <b>Student Card</b> on the table</p>
+      <p class="m-0.5">2. You are <b>not allowed</b> to leave early during the PA</p>
+      <p class="m-0.5">3. Read the <b>PA instructions</b> carefully</p>
+      <p class="m-0.5">4. <b>Password</b> will be given when the assessment is about to start</p>
+      <p class="m-0.5">5. When the time is up, <b>save ALL programs</b> and press on the <b>Finalise Submission</b> button</p>
+      <p class="m-0.5">6. <b>Remain and wait</b> for the invigilator to check your submission after clicking "Finalise Submission"</p>
+      <p class="m-0.5">7. <b>DO NOT log out</b> from Source Academy or <b>shutdown your computer</b> until you are told to do so</p>
+      <p class="m-0.5">8. If you have any questions during the assessment, please <b>raise your hand</b> and follow the instructions from the invigilator.</p>
+    </div>
+  </div>
+
+  <div class="mt-4 w-screen flex justify-center text-lg">
+    <div class="w-[65vw]">
+      <p class="font-bold text-2xl my-2">Clarifications:</p>
+      <md-block id="clarifications"></md-block>
+    </div>
+  </div>
+
+  <script>
+    // start time and end times in 24hr format
+    let start = '0300';
+    let end = '1440';
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const startTime = urlParams.get('start');
+
+    function formatTime(time) {
+      let suffix = 'PM';
+      let hour = parseInt(time.slice(0, 2));
+      const minute = time.slice(2);
+
+      if (hour > 12) hour -= 12;
+      else suffix = 'AM';
+
+      if (hour === 0) hour = 12;
+
+      return `${hour}:${minute} ${suffix}`;
+    }
+
+    function updateTimer() {
+      setInterval(() => {
+        const now = new Date();
+        const hours = now.getHours();
+        const minutes = now.getMinutes();
+        
+        const time = `${hours.toString().padStart(2, '0')}${minutes}`;
+        if (time < start) {
+          document.getElementById('timer').innerHTML = '00:00:00'
+          return;
+        }
+
+        const endHour = parseInt(end.slice(0, 2));
+        const endMinute = parseFloat(end.slice(2));
+        const endTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), endHour, endMinute, 0);
+
+        const delta = endTime - now;
+        if (delta < 0) {
+          document.getElementById('timer').innerHTML = '00:00:00'
+          return;
+        }
+
+        const timeHours = Math.floor(delta / 3600000);
+        const timeMinutes = Math.floor((delta % 3600000) / 60000);
+        const timeSeconds = Math.floor((delta % 60000) / 1000);
+
+        let timer = timeHours.toString().padStart(2, '0') + '<span class="px-1">:</span>';
+        timer += timeMinutes.toString().padStart(2, '0') + '<span class="px-1">:</span>';
+        timer += timeSeconds.toString().padStart(2, '0');
+        document.getElementById('timer').innerHTML = timer;
+      }, 1000);
+    }
+
+    function refreshClarifications() {
+      setInterval(() => {
+        // fetch('clarification.md')
+      }, 10000); // every 10 seconds
+      document.getElementById('clarifications').mdContent = '# test\n## test\n### test\n1. test';
+    }
+
+    window.onload = () => {
+      document.getElementById('start').innerHTML = formatTime(start);
+      document.getElementById('end').innerHTML = formatTime(end);
+
+      updateTimer();
+      refreshClarifications();
+    }
+  </script>
+</body>
+</html>
