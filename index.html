@@ -80,12 +80,22 @@
 
   <script>
     // start time and end times in 24hr format
-    let start = '0300';
+    let start = '1300';
     let end = '1440';
+    const duration = 100; // 1 hour 40 mins
     const LOCAL_TESTING = false;
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const startTime = urlParams.get('start');
+    function parseStartTime() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const startTime = urlParams.get('start');
+
+      if (startTime) {
+        start = startTime;
+        const date = hhmmToDate(start);
+        const endTime = new Date(date.getTime() + duration * 60000);
+        end = endTime.getHours().toString().padStart(2, '0') + endTime.getMinutes().toString().padStart(2, '0');
+      }
+    }
 
     function formatTime(time) {
       let suffix = 'PM';
@@ -100,7 +110,14 @@
       return `${hour}:${minute} ${suffix}`;
     }
 
-    function updateTimer() {
+    function hhmmToDate(hhmm) {
+      const now = new Date();
+      const hh = parseInt(hhmm.slice(0, 2));
+      const mm = parseFloat(hhmm.slice(2));
+      return new Date(now.getFullYear(), now.getMonth(), now.getDate(), hh, mm, 0);
+    }
+
+    function runUpdateTimer() {
       setInterval(() => {
         const now = new Date();
         const hours = now.getHours();
@@ -112,10 +129,7 @@
           return;
         }
 
-        const endHour = parseInt(end.slice(0, 2));
-        const endMinute = parseFloat(end.slice(2));
-        const endTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), endHour, endMinute, 0);
-
+        const endTime = hhmmToDate(end);
         const delta = endTime - now;
         if (delta < 0) {
           document.getElementById('timer').innerHTML = '00:00:00'
@@ -151,10 +165,13 @@
     }
 
     window.onload = () => {
+      parseStartTime();
+
       document.getElementById('start').innerHTML = formatTime(start);
       document.getElementById('end').innerHTML = formatTime(end);
 
-      updateTimer();
+      runUpdateTimer();
+
       refreshClarifications();
       setInterval(refreshClarifications, 10000); // every 10 seconds
     }
