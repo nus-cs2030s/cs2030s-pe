@@ -139,7 +139,7 @@
         return;
       }
 
-      fetch('clarifications.md')
+      fetch('clarifications.md', {cache: "no-cache"})
         .then(res => res.text())
         .then(data => {
           document.getElementById('clarifications').mdContent = data;
