@@ -133,10 +133,15 @@
     }
 
     function refreshClarifications() {
-      setInterval(() => {
-        // fetch('clarification.md')
-      }, 10000); // every 10 seconds
-      document.getElementById('clarifications').mdContent = '# test\n## test\n### test\n1. test';
+      fetch('clarifications.md')
+        .then(res => res.text())
+        .then(data => {
+          document.getElementById('clarifications').mdContent = data;
+        })
+        .catch(err => {
+          console.log(err);
+          document.getElementById('clarifications').mdContent = 'Error loading, check console.';
+        });
     }
 
     window.onload = () => {
@@ -145,6 +150,7 @@
 
       updateTimer();
       refreshClarifications();
+      setInterval(refreshClarifications, 10000); // every 10 seconds
     }
   </script>
 </body>
