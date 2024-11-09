@@ -58,6 +58,10 @@
     <div id="timer" class="font-thin text-[5rem] leading-none">00:00:00</div>
   </div>
 
+  <div id="passwd" class="hidden mb-6 w-full flex justify-center">
+    <div class="text-3xl font-extralight">Password: <code id="password"></code></div>
+  </div>
+
   <div class="my-4 w-full flex justify-center">
     <div class="w-[65vw] rounded-xl bg-slate-100 p-3 text-lg">
       <p class="m-0.5">1. Place your <b>Student Card</b> on the table</p>
@@ -85,8 +89,9 @@
     const duration = 100; // 1 hour 40 mins
     const LOCAL_TESTING = false;
 
+    const urlParams = new URLSearchParams(window.location.search);
+
     function parseStartTime() {
-      const urlParams = new URLSearchParams(window.location.search);
       const startTime = urlParams.get('start');
 
       if (startTime) {
@@ -94,6 +99,15 @@
         const date = hhmmToDate(start);
         const endTime = new Date(date.getTime() + duration * 60000);
         end = endTime.getHours().toString().padStart(2, '0') + endTime.getMinutes().toString().padStart(2, '0');
+      }
+    }
+
+    function showPassword() {
+      const pwd = urlParams.get('pwd');
+
+      if (pwd) {
+        document.getElementById('passwd').classList.remove('hidden');
+        document.getElementById('password').innerHTML = pwd;
       }
     }
 
@@ -166,6 +180,7 @@
 
     window.onload = () => {
       parseStartTime();
+      showPassword();
 
       document.getElementById('start').innerHTML = formatTime(start);
       document.getElementById('end').innerHTML = formatTime(end);
