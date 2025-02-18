@@ -86,13 +86,13 @@
     // start time and end times in 24hr format
     let start = '1300';
     let end = '1440';
-    const duration = 100; // 1 hour 40 mins
     const LOCAL_TESTING = false;
 
     const urlParams = new URLSearchParams(window.location.search);
 
     function parseStartTime() {
       const startTime = urlParams.get('start');
+      const duration = urlParams.get('duration');
 
       if (startTime) {
         start = startTime;
