@@ -53,6 +53,10 @@
       </div>
     </div>
   </div>
+  
+  <div class="my-2 w-full flex justify-center">
+    <div id="clock" class="font-light text-2xl"></div>
+  </div>
 
   <div class="my-8 w-full flex justify-center">
     <div id="timer" class="font-thin text-[5rem] leading-none">00:00:00</div>
@@ -102,6 +106,19 @@
       }
     }
 
+        function updateClock() {
+      const now = new Date();
+      let hours = now.getHours();
+      const minutes = now.getMinutes().toString().padStart(2, '0');
+      const seconds = now.getSeconds().toString().padStart(2, '0');
+      
+      // Construct display string
+      const displayString = `${hours.toString().padStart(2, '0')}:${minutes}:${seconds}`;
+      
+      // Update the clock element
+      document.getElementById('clock').textContent = displayString;
+    }
+    
     function showPassword() {
       const pwd = urlParams.get('pwd');
 
@@ -186,7 +203,10 @@
       document.getElementById('end').innerHTML = formatTime(end);
 
       runUpdateTimer();
-
+      
+      updateClock();
+      setInterval(updateClock, 1000); // update every second
+      
       refreshClarifications();
       setInterval(refreshClarifications, 10000); // every 10 seconds
     }
