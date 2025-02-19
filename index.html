@@ -131,17 +131,20 @@
       }
     }
 
-    function formatTime(time) {
-      let suffix = 'PM';
-      let hour = parseInt(time.slice(0, 2));
+    function formatTime(time, hr = true) {
+      let hour = hr ? time.slice(0, 2) : parseInt(time.slice(0, 2));
       const minute = time.slice(2);
 
-      if (hour > 12) hour -= 12;
-      else suffix = 'AM';
+      if (!hr) { // show time in AM/PM 
+        let suffix = 'PM';
+        if (hour > 12) hour -= 12;
+        else suffix = 'AM';
 
-      if (hour === 0) hour = 12;
+        if (hour === 0) hour = 12;
+        return `${hour}:${minute} ${suffix}`;
+      }
 
-      return `${hour}:${minute} ${suffix}`;
+      return `${hour}:${minute}`;
     }
 
     function hhmmToDate(hhmm) {
