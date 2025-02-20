@@ -1,13 +1,15 @@
 # Question 4
 
-On Page 5, Line 3, it says:
+On Page 3, Line 3, it says:
 
-<blockquote>The class `Student` also overrides `toString` to ..
+<blockquote>
+  The class `Student` also overrides `toString` to ..
 </blockquote> 
 
 It should say:
 
-<blockquote>The class `EnrolledStudent` also overrides `toString` to ..
+<blockquote>
+  The class `EnrolledStudent` also overrides `toString` to ..
 </blockquote> 
 
 # format.sh
