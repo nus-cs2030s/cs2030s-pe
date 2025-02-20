@@ -1,14 +1,3 @@
-# Q3 clarification:
-
-Format should be 
-
-  - `name + " (" + weight + " g)"`
-    
-instead of 
-
-  - `name + " ( " + weight + "g)"`
-
-
 # format.sh
 <br>
 The test files `Test1.java` `Test2.java` and `Test3.java` cannot be edited by default.  When you try to format it with `./format.sh` it is normal to see an error similar to this:
