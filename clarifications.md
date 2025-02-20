@@ -2,11 +2,11 @@
 
 On Page 5, Line 3, it says:
 
-The class `Student` also overrides `toString` to ..
+> The class `Student` also overrides `toString` to ..
 
 It should say:
 
-The class `EnrolledStudent` also overrides `toString` to ..
+> The class `EnrolledStudent` also overrides `toString` to ..
 
 # format.sh
 <br>
