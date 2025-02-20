@@ -4,13 +4,13 @@ On Page 3, Line 3, it says:
 
 <br>
 <blockquote>
-&nbsp;&nbsp;The class `Student` also overrides `toString` to ..
+&nbsp;&nbsp;The class <code>Student</code> also overrides <code>toString</code> to ..
 </blockquote> 
 <br>
 It should say:
 <br>
 <blockquote>
-&nbsp;&nbsp;The class `EnrolledStudent` also overrides `toString` to ..
+&nbsp;&nbsp;The class <code>EnrolledStudent</code> also overrides <code>toString</code> to ..
 </blockquote> 
 <br>
 <br>
