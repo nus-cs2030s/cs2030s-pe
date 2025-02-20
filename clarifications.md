@@ -1,6 +1,6 @@
 # Q3 clarification:
 
-Format should be `name + " (" + weight + " g")` instead of `name + " ( " + weight + "g")`.
+Format should be `name + " (" + weight + " g)"` instead of `name + " ( " + weight + "g)")`.
 
 
 # format.sh
