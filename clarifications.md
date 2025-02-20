@@ -1,7 +1,6 @@
 # Question 4
 
 On Page 3, Line 3, it says:
-
 <br>
 <blockquote>
 &nbsp;&nbsp;The class <code>Student</code> also overrides <code>toString</code> to ..
