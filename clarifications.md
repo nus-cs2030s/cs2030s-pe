@@ -1,3 +1,13 @@
+# Question 4
+
+On Page 5, Line 3, it says:
+
+The class `Student` also overrides `toString` to ..
+
+It should say:
+
+The class `EnrolledStudent` also overrides `toString` to ..
+
 # format.sh
 <br>
 The test files `Test1.java` `Test2.java` and `Test3.java` cannot be edited by default.  When you try to format it with `./format.sh` it is normal to see an error similar to this:
