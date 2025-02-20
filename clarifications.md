@@ -1,5 +1,5 @@
 # Question 4
-
+<br>
 On Page 3, Line 3, it says:
 <br>
 <blockquote>
@@ -13,7 +13,7 @@ It should say:
 </blockquote> 
 <br>
 <br>
-
+<hr>
 # format.sh
 <br>
 The test files `Test1.java` `Test2.java` and `Test3.java` cannot be edited by default.  When you try to format it with `./format.sh` it is normal to see an error similar to this:
