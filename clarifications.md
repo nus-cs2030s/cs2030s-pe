@@ -19,7 +19,8 @@
    should be changed to
 </div>
 <div style="font-size: 150%">
-     with the error message <font color="red"><tt>Attraction capacity of CAPACITY reached</tt> if the maximum visitors allowed
+    <br>
+     with the error message <font color="red"><tt>Attraction capacity of CAPACITY reached</tt></font> if the maximum visitors allowed
 </div>
 <div style="font-size: 150%">
   where CAPACITY is replaced with the capacity of the attraction. 
