@@ -22,11 +22,11 @@
 
 <br>
 <h1 style="font-size: 200%">
-  <!-- TITLE HERE -->
+  Running Test1 - Test4.java
 </h1>
 <br>
 <div style="font-size: 150%">
-  <!-- BODY HERE -->
+  Always compile _your_ classes first before testing.  Otherwise, the testing code cannot find your classes.
 </div>
 
 <br>
