@@ -6,14 +6,14 @@
 <br>
 <div style="font-size: 150%">
   <!-- BODY HERE -->
-   Every visitor queue has a field named <tt>ticketType</tt> of type <tt>int</tt>.
+   Every visitor queue has a field named <tt>ticketType</tt> of type <tt>int</tt> that denotes the type of tickets ..
 </div> 
 <br><div style="font-size: 150%">
    should be changed to
 </div>
 <br><div style="font-size: 150%">
   <!-- BODY HERE -->
-   Every visitor queue has a field named <font color="red"><tt>id</tt></font> of type <tt>int</tt>.
+   Every visitor queue has a field named <font color="red"><tt>id</tt></font> of type <tt>int</tt> that denotes the type of tickets ..
 </div> 
 <br>
 <br>
