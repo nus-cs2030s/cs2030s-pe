@@ -17,7 +17,7 @@
 <br>
 <div style="font-size: 150%">
   <!-- BODY HERE -->
-  The implementation also provides max <del>and min</del> method<del>s</del> to find ...
+  The implementation also provides max <del>and min</del> method<del>s</del> to find the maximum <del>and minimum</del> element in the sequence <del>respectively</del>.
 </div>
 
 <br>
