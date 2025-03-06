@@ -1,6 +1,24 @@
 <br>
 <h1 style="font-size: 200%">
   <!-- TITLE HERE -->
+  Correction for Question 3
+</h1>
+<br>
+<div style="font-size: 150%">
+  <!-- BODY HERE -->
+   Every visitor queue has a field named <tt>ticketType</tt> of type <tt>int</tt>.
+</div> 
+<div style="font-size: 150%">
+   should be changed to
+</div>
+<div style="font-size: 150%">
+  <!-- BODY HERE -->
+   Every visitor queue has a field named <tt color="red">id</tt> of type <tt>int</tt>.
+</div> 
+
+
+<h1 style="font-size: 200%">
+  <!-- TITLE HERE -->
   Instruction Page
 </h1>
 <br>
