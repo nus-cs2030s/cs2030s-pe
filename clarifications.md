@@ -1,8 +1,6 @@
 
-<h1>format.sh and checkstyle.sh</h1>
+<h1 size="200%">format.sh and checkstyle.sh</h1>
 <br>
-<p>
-<font size=200%>
+<div size="150%">
 You can ignore errors or warnings related to the given test files.
-</font>
-</p>
+</div>
