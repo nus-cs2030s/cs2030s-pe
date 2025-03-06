@@ -26,7 +26,7 @@
   <!-- BODY HERE -->
    The return type of <code>compareTo</code> method on the instruction page should be <code>int</code> instead of <code>boolean</code>.
 </div>
-
+<br>
 <br>
 <h1 style="font-size: 200%">
   Running Test1 - Test4.java
