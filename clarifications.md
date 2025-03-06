@@ -7,6 +7,7 @@
 <div style="font-size: 150%">
   <!-- BODY HERE -->
    In paragraph 3, "Write <tt>VisitorCentre</tt> so that it implements .."  the second bullet point:
+  <br>
   <ul>
     <li>The method <tt>admitToAttaction</tt> takes no argument and ...
     </li>
@@ -18,19 +19,11 @@
    should be changed to
 </div>
 <div style="font-size: 150%">
-     with the error message <tt>Attraction capacity of CAPACITY reached</tt> if the maximum visitors allowed
+     with the error message <font color="red"><tt>Attraction capacity of CAPACITY reached</tt> if the maximum visitors allowed
 </div>
-<div>
+<div style="font-size: 150%">
   where CAPACITY is replaced with the capacity of the attraction. 
 </div>
-<br><div style="font-size: 150%">
-  <!-- BODY HERE -->
-   Every visitor queue has a field named <font color="red"><tt>id</tt></font> of type <tt>int</tt> that denotes the type of tickets ..
-</div> 
-<br><div style="font-size: 150%">
-   should be changed to
-</div>
-
 <br>
 <br>
 <h1 style="font-size: 200%">
