@@ -13,7 +13,7 @@
 </div>
 <br><div style="font-size: 150%">
   <!-- BODY HERE -->
-   Every visitor queue has a field named <tt color="red">id</tt> of type <tt>int</tt>.
+   Every visitor queue has a field named <font color="red"><tt>id</tt></font> of type <tt>int</tt>.
 </div> 
 <br>
 <br>
