@@ -4,10 +4,10 @@
   Correction for Question 4
 </h1>
 <br>
-<div style="font-size: 150%; line-height: 1.3;">
+<div style="font-size: 150%; line-height: 1.4;">
   <!-- BODY HERE -->
    In paragraph 3, "Write <tt>VisitorCentre</tt> so that it implements .."  the second bullet point:
-  <br>
+  <br><br>
   <ul>
     <li>The method <tt>admitToAttaction</tt> takes no argument and ...
     </li>
@@ -15,13 +15,14 @@
   <br>
   with the error message <tt>Capacity exceeded</tt> if the maximum visitors allowed
 </div> 
-<br><div style="font-size: 150%; line-height: 1.3;">
+<br><div style="font-size: 150%; line-height: 1.4;">
+should be changed to
 </div>
 <div style="font-size: 150%; line-height: 1.3;">
     <br>
      with the error message <font color="red"><tt>Attraction capacity of CAPACITY reached</tt></font> if the maximum visitors allowed
 </div>
-<div style="font-size: 150%; line-height: 1.3;">
+<div style="font-size: 150%; line-height: 1.4;">
   where CAPACITY is replaced with the capacity of the attraction. 
 </div>
 <br>
@@ -31,14 +32,14 @@
   Correction for Question 3
 </h1>
 <br>
-<div style="font-size: 150%; line-height: 1.3;">
+<div style="font-size: 150%; line-height: 1.4;">
   <!-- BODY HERE -->
    Every visitor queue has a field named <tt>ticketType</tt> of type <tt>int</tt> that denotes the type of tickets ..
 </div> 
-<div style="font-size: 150%; line-height: 1.3;">
+<div style="font-size: 150%; line-height: 1.4;">
    should be changed to
 </div>
-<div style="font-size: 150%; line-height: 1.3;">
+<div style="font-size: 150%; line-height: 1.4;">
   <!-- BODY HERE -->
    Every visitor queue has a field named <font color="red"><tt>id</tt></font> of type <tt>int</tt> that denotes the type of tickets ..
 </div> 
@@ -49,7 +50,7 @@
   Instruction Page
 </h1>
 <br>
-<div style="font-size: 150%; line-height: 1.3;">
+<div style="font-size: 150%; line-height: 1.4;">
   <!-- BODY HERE -->
    The return type of <code>compareTo</code> method on the instruction page should be <code>int</code> instead of <code>boolean</code>.
 </div>
@@ -59,7 +60,7 @@
   Running Test1 - Test4.java
 </h1>
 <br>
-<div style="font-size: 150%; line-height: 1.3;">
+<div style="font-size: 150%; line-height: 1.4;">
   Always compile _your_ classes first before testing.  Otherwise, the testing code cannot find your classes.
 </div>
 
