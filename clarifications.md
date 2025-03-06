@@ -8,15 +8,15 @@
   <!-- BODY HERE -->
    Every visitor queue has a field named <tt>ticketType</tt> of type <tt>int</tt>.
 </div> 
-<div style="font-size: 150%">
+<br><div style="font-size: 150%">
    should be changed to
 </div>
-<div style="font-size: 150%">
+<br><div style="font-size: 150%">
   <!-- BODY HERE -->
    Every visitor queue has a field named <tt color="red">id</tt> of type <tt>int</tt>.
 </div> 
-
-
+<br>
+<br>
 <h1 style="font-size: 200%">
   <!-- TITLE HERE -->
   Instruction Page
