@@ -1,6 +1,35 @@
-
-<h1 style="font-size: 200%">format.sh and checkstyle.sh</h1>
+<br>
+<h1 style="font-size: 200%">
+  <!-- TITLE HERE -->
+</h1>
 <br>
 <div style="font-size: 150%">
-You can ignore errors or warnings related to the given test files.
+  <!-- BODY HERE -->
+</div>
+
+<br>
+<h1 style="font-size: 200%">
+  <!-- TITLE HERE -->
+</h1>
+<br>
+<div style="font-size: 150%">
+  <!-- BODY HERE -->
+</div>
+
+<br>
+<h1 style="font-size: 200%">
+  <!-- TITLE HERE -->
+</h1>
+<br>
+<div style="font-size: 150%">
+  <!-- BODY HERE -->
+</div>
+
+<br>
+<h1 style="font-size: 200%">
+  <!-- TITLE HERE -->
+</h1>
+<br>
+<div style="font-size: 150%">
+  <!-- BODY HERE -->
 </div>
