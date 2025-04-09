@@ -84,7 +84,7 @@
     const FONT_SCALING = '100%';
     const LOCAL_TESTING = false;
 
-    const md = window.markdownit();
+    const md = window.markdownit({html: true});
     const urlParams = new URLSearchParams(window.location.search);
 
     function parseStartTime() {
