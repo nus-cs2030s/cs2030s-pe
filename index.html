@@ -176,13 +176,13 @@
 
     // replaces mkdocs editing syntax either with a red strikethrough tag or a blue span tag
     function processEditingSyntax(content) {
-      const strikes = [...content.matchAll(/{--([\w ]+)--}/g)];
+      const strikes = [...content.matchAll(/{--([ -~]+?)--}/g)];
       for (let i = 0; i < strikes.length; i++) {
         const text = strikes[i][0];
         content = content.replace(text, `<s style="color: red">${strikes[i][1]}</s>`);
       }
 
-      const additions = [...content.matchAll(/{\+\+([\w ]+)\+\+}/g)];
+      const additions = [...content.matchAll(/{\+\+([ -~]+?)\+\+}/g)];
       for (let i = 0; i < additions.length; i++) {
         const text = additions[i][0];
         content = content.replace(text, `<span style="color: blue">${additions[i][1]}</span>`);
