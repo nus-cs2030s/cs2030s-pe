@@ -14,27 +14,6 @@
     body {
       font-family: Roboto, sans-serif;
     }
-
-    @layer base {
-      h1 {
-        @apply text-3xl font-bold;
-      }
-      h2 {
-        @apply text-2xl font-semibold;
-      }
-      h3 {
-        @apply text-xl font-medium;
-      }
-      h4 {
-        @apply text-lg font-medium;
-      }
-      ul {
-        @apply list-disc ml-5;
-      }
-      ol {
-        @apply list-decimal ml-5;
-      }
-    }
   </style>
 </head>
 <body>
@@ -90,6 +69,13 @@
     </div>
   </div>
 
+  <script>
+    tailwind.config = {
+      corePlugins: {
+        preflight: false
+      }
+    }
+  </script>
   <script>
     // start time and end times in 24hr format
     let start = '1300';
