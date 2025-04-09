@@ -4,36 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
-  <script type="module" src="https://md-block.verou.me/md-block.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/markdown-it@14.1.0/dist/markdown-it.min.js"></script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.8.1/github-markdown-light.min.css" integrity="sha512-X175XRJAO6PHAUi8AA7GP8uUF5Wiv+w9bOi64i02CHKDQBsO1yy0jLSKaUKg/NhRCDYBmOLQCfKaTaXiyZlLrw==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
 
   <style type="text/tailwindcss">
     body {
       font-family: Roboto, sans-serif;
-    }
-
-    @layer base {
-      h1 {
-        @apply text-3xl font-bold;
-      }
-      h2 {
-        @apply text-2xl font-semibold;
-      }
-      h3 {
-        @apply text-xl font-medium;
-      }
-      h4 {
-        @apply text-lg font-medium;
-      }
-      ul {
-        @apply list-disc ml-5;
-      }
-      ol {
-        @apply list-decimal ml-5;
-      }
     }
   </style>
 </head>
@@ -85,17 +65,26 @@
 
   <div class="mt-4 mb-8 w-full flex justify-center text-lg">
     <div class="w-[75vw]">
-      <p class="font-bold text-2xl my-2">Clarifications:</p>
-      <md-block id="clarifications"></md-block>
+      <span class="inline-block font-bold text-2xl border border-solid border-slate-800 rounded-lg px-1.5 py-0.5">Clarifications:</span>
+      <div class="markdown-body mx-1 my-0"><md-block id="clarifications"></md-block></div>
     </div>
   </div>
 
   <script>
+    tailwind.config = {
+      corePlugins: {
+        preflight: false
+      }
+    }
+  </script>
+  <script>
     // start time and end times in 24hr format
     let start = '1300';
     let end = '1440';
+    const FONT_SCALING = '100%';
     const LOCAL_TESTING = false;
 
+    const md = window.markdownit();
     const urlParams = new URLSearchParams(window.location.search);
 
     function parseStartTime() {
@@ -110,7 +99,7 @@
       }
     }
 
-        function updateClock() {
+    function updateClock() {
       const now = new Date();
       let hours = now.getHours();
       const minutes = now.getMinutes().toString().padStart(2, '0');
@@ -185,26 +174,45 @@
       }, 1000);
     }
 
+    // replaces mkdocs editing syntax either with a red strikethrough tag or a blue span tag
+    function processEditingSyntax(content) {
+      const strikes = [...content.matchAll(/{--([ -~]+?)--}/g)];
+      for (let i = 0; i < strikes.length; i++) {
+        const text = strikes[i][0];
+        content = content.replace(text, `<s style="color: red">${strikes[i][1]}</s>`);
+      }
+
+      const additions = [...content.matchAll(/{\+\+([ -~]+?)\+\+}/g)];
+      for (let i = 0; i < additions.length; i++) {
+        const text = additions[i][0];
+        content = content.replace(text, `<span style="color: blue">${additions[i][1]}</span>`);
+      }
+
+      return content;
+    }
+
     function refreshClarifications() {
       if (LOCAL_TESTING) {
-        document.getElementById('clarifications').mdContent = ``;
+        document.getElementById('clarifications').innerHTML = processEditingSyntax(md.render(``));
         return;
       }
 
       fetch('clarifications.md', {cache: "no-cache"})
         .then(res => res.text())
         .then(data => {
-          document.getElementById('clarifications').mdContent = data;
+          document.getElementById('clarifications').innerHTML = processEditingSyntax(md.render(data));
         })
         .catch(err => {
           console.log(err);
-          document.getElementById('clarifications').mdContent = 'Error loading, check console.';
+          document.getElementById('clarifications').innerHTML = 'Error loading, check console.';
         });
     }
 
     window.onload = () => {
       parseStartTime();
       showPassword();
+
+      document.getElementById('clarifications').style.fontSize = FONT_SCALING;
 
       document.getElementById('start').innerHTML = formatTime(start);
       document.getElementById('end').innerHTML = formatTime(end);
