@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
-  <script type="module" src="https://md-block.verou.me/md-block.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/markdown-it@14.1.0/dist/markdown-it.min.js"></script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -84,6 +84,7 @@
     const FONT_SCALING = '100%';
     const LOCAL_TESTING = false;
 
+    const md = window.markdownit();
     const urlParams = new URLSearchParams(window.location.search);
 
     function parseStartTime() {
@@ -175,18 +176,18 @@
 
     function refreshClarifications() {
       if (LOCAL_TESTING) {
-        document.getElementById('clarifications').mdContent = ``;
+        document.getElementById('clarifications').innerHTML = md.render(``);
         return;
       }
 
       fetch('clarifications.md', {cache: "no-cache"})
         .then(res => res.text())
         .then(data => {
-          document.getElementById('clarifications').mdContent = data;
+          document.getElementById('clarifications').innerHTML = md.render(data);
         })
         .catch(err => {
           console.log(err);
-          document.getElementById('clarifications').mdContent = 'Error loading, check console.';
+          document.getElementById('clarifications').innerHTML = 'Error loading, check console.';
         });
     }
 
