@@ -174,16 +174,33 @@
       }, 1000);
     }
 
+    // replaces mkdocs editing syntax either with a red strikethrough tag or a blue span tag
+    function processEditingSyntax(content) {
+      const strikes = [...content.matchAll(/{--([\w ]+)--}/g)];
+      for (let i = 0; i < strikes.length; i++) {
+        const text = strikes[i][0];
+        content = content.replace(text, `<s style="color: red">${strikes[i][1]}</s>`);
+      }
+
+      const additions = [...content.matchAll(/{\+\+([\w ]+)\+\+}/g)];
+      for (let i = 0; i < additions.length; i++) {
+        const text = additions[i][0];
+        content = content.replace(text, `<span style="color: blue">${additions[i][1]}</span>`);
+      }
+
+      return content;
+    }
+
     function refreshClarifications() {
       if (LOCAL_TESTING) {
-        document.getElementById('clarifications').innerHTML = md.render(``);
+        document.getElementById('clarifications').innerHTML = processEditingSyntax(md.render(``));
         return;
       }
 
       fetch('clarifications.md', {cache: "no-cache"})
         .then(res => res.text())
         .then(data => {
-          document.getElementById('clarifications').innerHTML = md.render(data);
+          document.getElementById('clarifications').innerHTML = processEditingSyntax(md.render(data));
         })
         .catch(err => {
           console.log(err);
