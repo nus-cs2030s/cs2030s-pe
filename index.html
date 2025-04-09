@@ -81,6 +81,7 @@
     // start time and end times in 24hr format
     let start = '1300';
     let end = '1440';
+    const FONT_SCALING = '100%';
     const LOCAL_TESTING = false;
 
     const urlParams = new URLSearchParams(window.location.search);
@@ -192,6 +193,8 @@
     window.onload = () => {
       parseStartTime();
       showPassword();
+
+      document.getElementById('clarifications').style.fontSize = FONT_SCALING;
 
       document.getElementById('start').innerHTML = formatTime(start);
       document.getElementById('end').innerHTML = formatTime(end);
