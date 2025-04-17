@@ -1,6 +1,7 @@
 
 <div style="font-size: 200%;">
-## Question 1(c)
+  
+## Question 1c
 
 You can import the `Comparator` interface with
 
