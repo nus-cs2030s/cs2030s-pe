@@ -1,5 +1,12 @@
 
 <div style="font-size: 200%;">
+## Question 1(c)
+
+You can import the `Comparator` interface with
+
+```Java
+import java.util.Comparator;
+```
 
 ## Question 2
 
