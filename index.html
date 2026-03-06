@@ -48,20 +48,6 @@
   <div id="passwd" class="hidden mb-6 w-full flex justify-center">
     <div class="text-3xl font-extralight">Password: <code id="password"></code></div>
   </div>
-  <!--- Commenting out for PE0
-  <div class="my-4 w-full flex justify-center">
-    <div class="w-[75vw] rounded-xl bg-slate-100 p-3 text-lg">
-      <p class="m-0.5">1. Place your <b>Student Card</b> on the table</p>
-      <p class="m-0.5">2. You are <b>not allowed</b> to leave early during the PA</p>
-      <p class="m-0.5">3. Read the <b>PA instructions</b> carefully</p>
-      <p class="m-0.5">4. <b>Password</b> will be given when the assessment is about to start</p>
-      <p class="m-0.5">5. When the time is up, <b>save ALL programs</b> and press on the <b>Finalise Submission</b> button</p>
-      <p class="m-0.5">6. <b>Remain and wait</b> for the invigilator to check your submission after clicking "Finalise Submission"</p>
-      <p class="m-0.5">7. <b>DO NOT log out</b> from Source Academy or <b>shutdown your computer</b> until you are told to do so</p>
-      <p class="m-0.5">8. If you have any questions during the assessment, please <b>raise your hand</b> and follow the instructions from the invigilator.</p>
-    </div>
-  </div>
-  --->
 
   <div class="mt-4 mb-8 w-full flex justify-center text-lg">
     <div class="w-[75vw]">
@@ -83,9 +69,14 @@
     let end = '1440';
     const FONT_SCALING = '100%';
     const LOCAL_TESTING = false;
+    const PASSWORD_CONFIG_FILE = 'password.json';
 
     const md = window.markdownit({html: true});
     const urlParams = new URLSearchParams(window.location.search);
+    let passwordConfig = {
+      password: '',
+      showWhenRemainingMinutes: 15
+    };
 
     function parseStartTime() {
       const startTime = urlParams.get('start');
@@ -105,19 +96,34 @@
       const minutes = now.getMinutes().toString().padStart(2, '0');
       const seconds = now.getSeconds().toString().padStart(2, '0');
       
-      // Construct display string
       const displayString = `${hours.toString().padStart(2, '0')}:${minutes}:${seconds}`;
-      
-      // Update the clock element
       document.getElementById('clock').textContent = displayString;
     }
-    
-    function showPassword() {
-      const pwd = urlParams.get('pwd');
 
-      if (pwd) {
+    function getRemainingMs(now = new Date()) {
+      const startTime = hhmmToDate(start);
+      const endTime = hhmmToDate(end);
+
+      if (now < startTime) {
+        return 0;
+      }
+
+      return Math.max(0, endTime - now);
+    }
+
+    function updatePasswordVisibility() {
+      const pwd = passwordConfig.password?.toString() ?? '';
+      const thresholdMinutes = Number(passwordConfig.showWhenRemainingMinutes);
+      const thresholdMs = Number.isFinite(thresholdMinutes) ? thresholdMinutes * 60000 : 15 * 60000;
+      const remainingMs = getRemainingMs();
+      const shouldShow = pwd.trim() !== '' && remainingMs > 0 && remainingMs <= thresholdMs;
+
+      if (shouldShow) {
+        document.getElementById('password').textContent = pwd;
         document.getElementById('passwd').classList.remove('hidden');
-        document.getElementById('password').innerHTML = pwd;
+      } else {
+        document.getElementById('password').textContent = '';
+        document.getElementById('passwd').classList.add('hidden');
       }
     }
 
@@ -125,7 +131,7 @@
       let hour = hr ? time.slice(0, 2) : parseInt(time.slice(0, 2));
       const minute = time.slice(2);
 
-      if (!hr) { // show time in AM/PM 
+      if (!hr) {
         let suffix = 'PM';
         if (hour > 12) hour -= 12;
         else suffix = 'AM';
@@ -153,13 +159,14 @@
         const time = `${hours.toString().padStart(2, '0')}${minutes}`;
         if (time < start) {
           document.getElementById('timer').innerHTML = '00:00:00'
+          updatePasswordVisibility();
           return;
         }
 
-        const endTime = hhmmToDate(end);
-        const delta = endTime - now;
-        if (delta < 0) {
+        const delta = getRemainingMs(now);
+        if (delta <= 0) {
           document.getElementById('timer').innerHTML = '00:00:00'
+          updatePasswordVisibility();
           return;
         }
 
@@ -171,6 +178,7 @@
         timer += timeMinutes.toString().padStart(2, '0') + '<span class="px-1">:</span>';
         timer += timeSeconds.toString().padStart(2, '0');
         document.getElementById('timer').innerHTML = timer;
+        updatePasswordVisibility();
       }, 1000);
     }
 
@@ -197,7 +205,7 @@
         return;
       }
 
-      fetch('clarifications.md', {cache: "no-cache"})
+      fetch('clarifications.md', {cache: 'no-cache'})
         .then(res => res.text())
         .then(data => {
           document.getElementById('clarifications').innerHTML = processEditingSyntax(md.render(data));
@@ -208,9 +216,33 @@
         });
     }
 
+    function refreshPasswordConfig() {
+      fetch(PASSWORD_CONFIG_FILE, {cache: 'no-cache'})
+        .then(res => {
+          if (!res.ok) {
+            throw new Error(`Unable to load ${PASSWORD_CONFIG_FILE}`);
+          }
+          return res.json();
+        })
+        .then(data => {
+          passwordConfig = {
+            password: data.password ?? '',
+            showWhenRemainingMinutes: Number(data.showWhenRemainingMinutes ?? 15)
+          };
+          updatePasswordVisibility();
+        })
+        .catch(err => {
+          console.log(err);
+          passwordConfig = {
+            password: '',
+            showWhenRemainingMinutes: 15
+          };
+          updatePasswordVisibility();
+        });
+    }
+
     window.onload = () => {
       parseStartTime();
-      showPassword();
 
       document.getElementById('clarifications').style.fontSize = FONT_SCALING;
 
@@ -220,10 +252,13 @@
       runUpdateTimer();
       
       updateClock();
-      setInterval(updateClock, 1000); // update every second
+      setInterval(updateClock, 1000);
       
       refreshClarifications();
-      setInterval(refreshClarifications, 10000); // every 10 seconds
+      setInterval(refreshClarifications, 10000);
+
+      refreshPasswordConfig();
+      setInterval(refreshPasswordConfig, 10000);
     }
   </script>
 </body>
