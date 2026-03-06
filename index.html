@@ -101,25 +101,22 @@
     }
 
     function getRemainingMs(now = new Date()) {
-  let startTime = hhmmToDate(start);
-  let endTime = hhmmToDate(end);
+      let startTime = hhmmToDate(start);
+      let endTime = hhmmToDate(end);
 
-  // handle wrap-around past midnight
-  if (endTime <= startTime) {
-    endTime.setDate(endTime.getDate() + 1);
-  }
+      // handle wrap-around past midnight
+      if (endTime <= startTime) {
+        endTime.setDate(endTime.getDate() + 1);
+      }
 
-  // handle case where current time is after midnight but before end
-  if (now < startTime && endTime.getDate() !== startTime.getDate()) {
-    startTime.setDate(startTime.getDate() - 1);
-  }
+      // handle case where current time is after midnight but before end
+      if (now < startTime && endTime.getDate() !== startTime.getDate()) {
+        startTime.setDate(startTime.getDate() - 1);
+      }
 
-  if (now < startTime) {
-    return 0;
-  }
-
-  return Math.max(0, endTime - now);
-}
+      if (now < startTime) {
+        return 0;
+      }
 
       return Math.max(0, endTime - now);
     }
@@ -157,11 +154,11 @@
     }
 
     function hhmmToDate(hhmm) {
-  const now = new Date();
-  const hh = parseInt(hhmm.slice(0, 2), 10);
-  const mm = parseInt(hhmm.slice(2), 10);
-  return new Date(now.getFullYear(), now.getMonth(), now.getDate(), hh, mm, 0);
-}
+      const now = new Date();
+      const hh = parseInt(hhmm.slice(0, 2), 10);
+      const mm = parseInt(hhmm.slice(2), 10);
+      return new Date(now.getFullYear(), now.getMonth(), now.getDate(), hh, mm, 0);
+    }
 
     function runUpdateTimer() {
       setInterval(() => {
