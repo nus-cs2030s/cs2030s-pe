@@ -34,16 +34,16 @@
     </div>
   </div>
   
-<div class="my-8 w-full flex justify-center items-center gap-32">
-  <div class="flex flex-col items-center">
-    <div class="text-2xl font-semibold mb-2 text-slate-600">Current Time</div>
-    <div id="clock" class="font-light text-[6rem] leading-none text-slate-500">00:00:00</div>
+  <div class="my-8 w-full flex justify-center items-center gap-32">
+    <div class="flex flex-col items-center">
+      <div class="text-2xl font-semibold mb-2 text-slate-600">Current Time</div>
+      <div id="clock" class="font-light text-[6rem] leading-none text-slate-500">00:00:00</div>
+    </div>
+    <div class="flex flex-col items-center">
+      <div class="text-2xl font-semibold mb-2">Time Remaining</div>
+      <div id="timer" class="font-light text-[6rem] leading-none">00:00:00</div>
+    </div>
   </div>
-  <div class="flex flex-col items-center">
-    <div class="text-2xl font-semibold mb-2">Time Remaining</div>
-    <div id="timer" class="font-light text-[6rem] leading-none">00:00:00</div>
-  </div>
-</div>
 
   <div id="passwd" class="hidden mb-6 w-full flex justify-center">
     <div class="text-3xl font-extralight">Password: <code id="password"></code></div>
@@ -84,15 +84,20 @@
 
       if (startTime) {
         start = startTime;
+      }
+
+      if (startTime && duration) {
         const date = hhmmToDate(start);
-        const endTime = new Date(date.getTime() + duration * 60000);
-        end = endTime.getHours().toString().padStart(2, '0') + endTime.getMinutes().toString().padStart(2, '0');
+        const endTime = new Date(date.getTime() + Number(duration) * 60000);
+        end =
+          endTime.getHours().toString().padStart(2, '0') +
+          endTime.getMinutes().toString().padStart(2, '0');
       }
     }
 
     function updateClock() {
       const now = new Date();
-      let hours = now.getHours();
+      const hours = now.getHours();
       const minutes = now.getMinutes().toString().padStart(2, '0');
       const seconds = now.getSeconds().toString().padStart(2, '0');
       
@@ -100,19 +105,57 @@
       document.getElementById('clock').textContent = displayString;
     }
 
-    function getRemainingMs(now = new Date()) {
-      let startTime = hhmmToDate(start);
-      let endTime = hhmmToDate(end);
+    function hhmmToDate(hhmm, baseDate = new Date()) {
+      let totalMinutes = parseInt(hhmm.slice(0, 2), 10) * 60 + parseInt(hhmm.slice(2), 10);
 
-      // handle wrap-around past midnight
+      // allow values like 1440, 1500, etc.
+      const dayOffset = Math.floor(totalMinutes / 1440);
+      totalMinutes = totalMinutes % 1440;
+
+      const hh = Math.floor(totalMinutes / 60);
+      const mm = totalMinutes % 60;
+
+      const date = new Date(
+        baseDate.getFullYear(),
+        baseDate.getMonth(),
+        baseDate.getDate(),
+        hh,
+        mm,
+        0,
+        0
+      );
+
+      if (dayOffset !== 0) {
+        date.setDate(date.getDate() + dayOffset);
+      }
+
+      return date;
+    }
+
+    function getSessionBounds(now = new Date()) {
+      let startTime = hhmmToDate(start, now);
+      let endTime = hhmmToDate(end, now);
+
+      // If end is not after start, session wraps into the next day.
       if (endTime <= startTime) {
         endTime.setDate(endTime.getDate() + 1);
+
+        // After midnight but before wrapped end, start was yesterday.
+        if (now < startTime) {
+          startTime.setDate(startTime.getDate() - 1);
+        }
       }
 
-      // handle case where current time is after midnight but before end
-      if (now < startTime && endTime.getDate() !== startTime.getDate()) {
-        startTime.setDate(startTime.getDate() - 1);
-      }
+      return { startTime, endTime };
+    }
+
+    function hasStarted(now = new Date()) {
+      const { startTime } = getSessionBounds(now);
+      return now >= startTime;
+    }
+
+    function getRemainingMs(now = new Date()) {
+      const { startTime, endTime } = getSessionBounds(now);
 
       if (now < startTime) {
         return 0;
@@ -124,9 +167,15 @@
     function updatePasswordVisibility() {
       const pwd = passwordConfig.password?.toString() ?? '';
       const thresholdMinutes = Number(passwordConfig.showWhenRemainingMinutes);
-      const thresholdMs = Number.isFinite(thresholdMinutes) ? thresholdMinutes * 60000 : 15 * 60000;
+      const thresholdMs = Number.isFinite(thresholdMinutes)
+        ? thresholdMinutes * 60000
+        : 15 * 60000;
+
       const remainingMs = getRemainingMs();
-      const shouldShow = pwd.trim() !== '' && remainingMs > 0 && remainingMs <= thresholdMs;
+      const shouldShow =
+        pwd.trim() !== '' &&
+        remainingMs > 0 &&
+        remainingMs <= thresholdMs;
 
       if (shouldShow) {
         document.getElementById('password').textContent = pwd;
@@ -138,44 +187,30 @@
     }
 
     function formatTime(time, hr = true) {
-      let hour = hr ? time.slice(0, 2) : parseInt(time.slice(0, 2));
+      let hour = hr ? time.slice(0, 2) : parseInt(time.slice(0, 2), 10);
       const minute = time.slice(2);
 
       if (!hr) {
         let suffix = 'PM';
-        if (hour > 12) hour -= 12;
+        if (hour >= 12) suffix = 'PM';
         else suffix = 'AM';
 
+        if (hour > 12) hour -= 12;
         if (hour === 0) hour = 12;
+
         return `${hour}:${minute} ${suffix}`;
       }
 
       return `${hour}:${minute}`;
     }
 
-    function hhmmToDate(hhmm) {
-      const now = new Date();
-      const hh = parseInt(hhmm.slice(0, 2), 10);
-      const mm = parseInt(hhmm.slice(2), 10);
-      return new Date(now.getFullYear(), now.getMonth(), now.getDate(), hh, mm, 0);
-    }
-
     function runUpdateTimer() {
       setInterval(() => {
         const now = new Date();
-        const hours = now.getHours();
-        const minutes = now.getMinutes();
-        
-        const time = `${hours.toString().padStart(2, '0')}${minutes}`;
-        if (time < start) {
-          document.getElementById('timer').innerHTML = '00:00:00'
-          updatePasswordVisibility();
-          return;
-        }
-
         const delta = getRemainingMs(now);
-        if (delta <= 0) {
-          document.getElementById('timer').innerHTML = '00:00:00'
+
+        if (!hasStarted(now) || delta <= 0) {
+          document.getElementById('timer').innerHTML = '00:00:00';
           updatePasswordVisibility();
           return;
         }
@@ -187,6 +222,7 @@
         let timer = timeHours.toString().padStart(2, '0') + '<span class="px-1">:</span>';
         timer += timeMinutes.toString().padStart(2, '0') + '<span class="px-1">:</span>';
         timer += timeSeconds.toString().padStart(2, '0');
+
         document.getElementById('timer').innerHTML = timer;
         updatePasswordVisibility();
       }, 1000);
@@ -269,7 +305,7 @@
 
       refreshPasswordConfig();
       setInterval(refreshPasswordConfig, 10000);
-    }
+    };
   </script>
 </body>
 </html>
