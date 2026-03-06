@@ -105,15 +105,21 @@
       document.getElementById('clock').textContent = displayString;
     }
 
+    function parseHHMM(hhmm) {
+      const totalMinutes =
+        parseInt(hhmm.slice(0, 2), 10) * 60 +
+        parseInt(hhmm.slice(2), 10);
+
+      return {
+        dayOffset: Math.floor(totalMinutes / 1440),
+        minutesOfDay: totalMinutes % 1440
+      };
+    }
+
     function hhmmToDate(hhmm, baseDate = new Date()) {
-      let totalMinutes = parseInt(hhmm.slice(0, 2), 10) * 60 + parseInt(hhmm.slice(2), 10);
-
-      // allow values like 1440, 1500, etc.
-      const dayOffset = Math.floor(totalMinutes / 1440);
-      totalMinutes = totalMinutes % 1440;
-
-      const hh = Math.floor(totalMinutes / 60);
-      const mm = totalMinutes % 60;
+      const { dayOffset, minutesOfDay } = parseHHMM(hhmm);
+      const hh = Math.floor(minutesOfDay / 60);
+      const mm = minutesOfDay % 60;
 
       const date = new Date(
         baseDate.getFullYear(),
@@ -125,25 +131,42 @@
         0
       );
 
-      if (dayOffset !== 0) {
-        date.setDate(date.getDate() + dayOffset);
-      }
-
+      date.setDate(date.getDate() + dayOffset);
       return date;
     }
 
     function getSessionBounds(now = new Date()) {
-      let startTime = hhmmToDate(start, now);
-      let endTime = hhmmToDate(end, now);
+      const startParts = parseHHMM(start);
+      const endParts = parseHHMM(end);
 
-      // If end is not after start, session wraps into the next day.
+      let startTime = hhmmToDate(start, now);
+
+      const wraps =
+        endParts.dayOffset > startParts.dayOffset ||
+        (endParts.dayOffset === startParts.dayOffset &&
+          endParts.minutesOfDay <= startParts.minutesOfDay);
+
+      // If session wraps and we're after midnight, the real start was yesterday.
+      if (wraps && now < startTime) {
+        startTime.setDate(startTime.getDate() - 1);
+      }
+
+      // Build endTime relative to startTime's date, not today's date.
+      let endTime = new Date(startTime);
+      endTime.setHours(
+        Math.floor(endParts.minutesOfDay / 60),
+        endParts.minutesOfDay % 60,
+        0,
+        0
+      );
+
+      const extraDays = endParts.dayOffset - startParts.dayOffset;
+      if (extraDays !== 0) {
+        endTime.setDate(endTime.getDate() + extraDays);
+      }
+
       if (endTime <= startTime) {
         endTime.setDate(endTime.getDate() + 1);
-
-        // After midnight but before wrapped end, start was yesterday.
-        if (now < startTime) {
-          startTime.setDate(startTime.getDate() - 1);
-        }
       }
 
       return { startTime, endTime };
