@@ -95,14 +95,41 @@
       }
     }
 
-    function updateClock() {
+    function updateDisplays() {
       const now = new Date();
-      const hours = now.getHours();
+
+      // Update clock
+      const hours = now.getHours().toString().padStart(2, '0');
       const minutes = now.getMinutes().toString().padStart(2, '0');
       const seconds = now.getSeconds().toString().padStart(2, '0');
-      
-      const displayString = `${hours.toString().padStart(2, '0')}:${minutes}:${seconds}`;
-      document.getElementById('clock').textContent = displayString;
+      document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+
+      // Update timer
+      const delta = getRemainingMs(now);
+
+      if (!hasStarted(now) || delta <= 0) {
+        document.getElementById('timer').innerHTML = '00:00:00';
+      } else {
+        const totalSeconds = Math.ceil(delta / 1000);
+        const timeHours = Math.floor(totalSeconds / 3600);
+        const timeMinutes = Math.floor((totalSeconds % 3600) / 60);
+        const timeSeconds = totalSeconds % 60;
+
+        const timer =
+          timeHours.toString().padStart(2, '0') +
+          '<span class="px-1">:</span>' +
+          timeMinutes.toString().padStart(2, '0') +
+          '<span class="px-1">:</span>' +
+          timeSeconds.toString().padStart(2, '0');
+
+        document.getElementById('timer').innerHTML = timer;
+      }
+
+      updatePasswordVisibility();
+
+      // Schedule exactly on the next second boundary
+      const delay = 1000 - (Date.now() % 1000);
+      setTimeout(updateDisplays, delay);
     }
 
     function parseHHMM(hhmm) {
@@ -227,30 +254,6 @@
       return `${hour}:${minute}`;
     }
 
-    function runUpdateTimer() {
-      setInterval(() => {
-        const now = new Date();
-        const delta = getRemainingMs(now);
-
-        if (!hasStarted(now) || delta <= 0) {
-          document.getElementById('timer').innerHTML = '00:00:00';
-          updatePasswordVisibility();
-          return;
-        }
-
-        const timeHours = Math.floor(delta / 3600000);
-        const timeMinutes = Math.floor((delta % 3600000) / 60000);
-        const timeSeconds = Math.floor((delta % 60000) / 1000);
-
-        let timer = timeHours.toString().padStart(2, '0') + '<span class="px-1">:</span>';
-        timer += timeMinutes.toString().padStart(2, '0') + '<span class="px-1">:</span>';
-        timer += timeSeconds.toString().padStart(2, '0');
-
-        document.getElementById('timer').innerHTML = timer;
-        updatePasswordVisibility();
-      }, 1000);
-    }
-
     // replaces mkdocs editing syntax either with a red strikethrough tag or a blue span tag
     function processEditingSyntax(content) {
       const strikes = [...content.matchAll(/{--([ -~]+?)--}/g)];
@@ -310,25 +313,21 @@
         });
     }
 
-    window.onload = () => {
-      parseStartTime();
+  window.onload = () => {
+    parseStartTime();
 
-      document.getElementById('clarifications').style.fontSize = FONT_SCALING;
+    document.getElementById('clarifications').style.fontSize = FONT_SCALING;
+    document.getElementById('start').innerHTML = formatTime(start);
+    document.getElementById('end').innerHTML = formatTime(end);
 
-      document.getElementById('start').innerHTML = formatTime(start);
-      document.getElementById('end').innerHTML = formatTime(end);
+    updateDisplays();
 
-      runUpdateTimer();
-      
-      updateClock();
-      setInterval(updateClock, 1000);
-      
-      refreshClarifications();
-      setInterval(refreshClarifications, 10000);
+    refreshClarifications();
+    setInterval(refreshClarifications, 10000);
 
-      refreshPasswordConfig();
-      setInterval(refreshPasswordConfig, 10000);
-    };
+    refreshPasswordConfig();
+    setInterval(refreshPasswordConfig, 10000);
+  };
   </script>
 </body>
 </html>
