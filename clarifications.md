@@ -5,7 +5,7 @@
 <p><strong>Correction 1:</strong><br>
 The <code>toString()</code> method should return the string representation of a request.
 The format of the string should represent the line segment as:
-<code>(x1, y1) -&gt; (x2, y2)</code>.
+<code>R\<id\> (x1, y1) -&gt; (x2, y2)</code>.
 </p>
 
 <p><strong>Correction 2:</strong><br>
