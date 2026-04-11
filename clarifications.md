@@ -1,10 +1,8 @@
-
-<div style="font-size: 200%;">
-## INSTRUCTIONS TO CANDIDATES
+### INSTRUCTIONS TO CANDIDATES
 
 1. This is a CLOSED-BOOK assessment. You are only allowed to refer to one double-sided A4-size paper.
 
-2. Only the files directly under your `$HOME` directories will be graded.
+2. Only the files directly under your `$HOME` directory will be graded.
 
 3. The skeleton files have been provided for you.  Do NOT add new files.
 
@@ -20,4 +18,7 @@
    
 **IMPORTANT**: Any code you wrote that cannot be compiled may result in 0 marks being given for the question(s) that depend on it.  Make sure your program
 compiles before the end of the exam.
+
+<div style="font-size: 200%;">
+
 </div>
